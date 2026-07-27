@@ -25,3 +25,19 @@ The application's health check endpoint in `api/routes/health.py` fails when pro
 * **Scope & Complexity:** The issue is well-scoped to a single API route (`api/routes/health.py`) and configuration file. It does not require database migrations or multi-module alterations, fitting the Tier 1 classification perfectly.
 * **Prerequisites:** I verified that Python 3.13 is active, dependencies are installed, and unit tests can be executed locally inside the virtual environment.
 * **Testing:** The fix can be cleanly validated using mocks for both successful and failing connection flows, making it highly testable without requiring heavy external dependencies during unit tests.
+
+---
+
+## Week 8 – Reproduction & solution planning
+
+**Reproduction commit link:** https://github.com/pharwadekar/pathreview/commit/cfe95b897130543ecc573264bf01278e6e99fb78
+
+**Reproduction summary:**
+Reproduced the issue locally via pytest in `tests/unit/test_health.py`. Running `health_check()` triggers an `AttributeError: 'Settings' object has no attribute 'redis_host'` because `api/routes/health.py` incorrectly attempts to read `settings.redis_host` and `settings.redis_port` instead of using the configured `settings.redis_url` string.
+
+**PLAN.md link:** https://github.com/pharwadekar/pathreview/blob/fix/155-healthcheck-redis-host/PLAN.md
+
+**Walkthrough video (recommended):** N/A (Optional 2-minute walkthrough)
+
+**Blockers or open questions:**
+None. Reproduction confirmed via unit tests; solution plan formulated and mapped across API routes and unit test suite.
