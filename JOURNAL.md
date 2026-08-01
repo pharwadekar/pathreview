@@ -74,3 +74,36 @@ Added unit tests in `tests/unit/test_health.py` (`test_health_check_all_healthy`
 **Self-review confirmation:** [x] make check passes  [x] make test-unit passes
 
 **Draft PR feedback received from:** @peer-reviewer
+
+---
+
+## Week 10 – Iteration & reflection
+
+### Reviewer feedback
+
+**Feedback received:** [ ] Yes  [x] No – still awaiting review
+
+**Summary of feedback:**
+As noted for the Summer 2026 cohort, active maintainer code reviews were not conducted prior to the submission deadline. The submitted pull request remains open and ready for maintainer review on the upstream repository.
+
+**How you responded:**
+N/A (No external maintainer feedback received before course conclusion).
+
+---
+
+### Reflection
+
+**What was harder than you expected?**
+Navigating the multi-module dependencies across FastAPI, Pydantic settings, and async SQLAlchemy/Redis mocks was more challenging than initially anticipated. Specifically, isolating whether a health check failure stemmed from missing database fixtures versus the unhandled `AttributeError` on `settings.redis_host` required stepping through async stack traces line-by-line using unit test mocks.
+
+**What did you learn about working in a large codebase?**
+Contributing to an existing production codebase requires strict adherence to existing architectural contracts and conventions rather than writing isolated scratch code. Every change must honor the project's typing standards, configuration models, docstrings, and pre-commit checks (`ruff`, `black`, `mypy`, `pytest`). Reading pre-existing unit test patterns in `tests/unit/` was crucial for writing clean, non-disruptive tests.
+
+**How did AI tools help – and where did they fall short?**
+AI tools were exceptionally effective at rapidly mapping references across the repository, generating precise `pytest` async mock boilerplate, and verifying static type annotations. However, AI tools fell short in recognizing subtle environment configuration mismatches (e.g., assuming `redis_host` should be added to `Settings` rather than leveraging the pre-existing `redis_url` connection string). Human inspection of `core/config.py` was essential to enforce the proper architectural pattern.
+
+**What would you do differently if you started over?**
+If starting over, I would run `ruff check` and `mypy` earlier in the reproduction phase to catch configuration schema mismatches instantly. I would also open a draft PR immediately after writing the initial reproduction unit test to gather early feedback from peers in Slack before finalizing implementation details.
+
+**What are you most proud of from this module?**
+I am most proud of delivering a complete, professional, open-source contribution workflow end-to-end—from reproduction and structured planning to unit testing, code formatting, and opening a clean pull request that passes all static analysis checks.
