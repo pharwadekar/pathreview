@@ -41,3 +41,36 @@ Reproduced the issue locally via pytest in `tests/unit/test_health.py`. Running 
 
 **Blockers or open questions:**
 None. Reproduction confirmed via unit tests; solution plan formulated and mapped across API routes and unit test suite.
+
+---
+
+## Week 9 – Solution building & PR submission
+
+### Check-in 1 (mid-week)
+
+**Current progress:**
+Completed sub-tasks 1, 2, and 3 from `PLAN.md`. Wrote reproduction unit tests in `tests/unit/test_health.py` capturing the `AttributeError`, refactored `api/routes/health.py` to use `redis.from_url(settings.redis_url, decode_responses=True)`, and updated Python type annotations across the health check route.
+
+**Next steps:**
+Run full quality checks (`ruff`, `black`, `mypy`, and `pytest`), review code against contribution standards in `CONTRIBUTING.md`, open draft PR for peer review in Slack, and finalize submission.
+
+**Blockers:**
+None.
+
+---
+
+### Check-in 2 (end of week)
+
+**PR link:** https://github.com/ascherj/pathreview/pull/178
+
+**Branch:** `fix/155-healthcheck-redis-host`
+
+**What you built:**
+Refactored the Redis dependency probe in `api/routes/health.py` to connect via `redis.from_url(settings.redis_url, decode_responses=True)` instead of attempting to access non-existent `settings.redis_host` and `settings.redis_port` attributes. Updated FastAPI route type annotations using `Annotated[AsyncSession, Depends(get_db)]` and return type `dict[str, Any]`, resolving the runtime `AttributeError` and ensuring accurate health reporting with appropriate HTTP status codes (200 OK vs 503 Service Unavailable).
+
+**Tests added or updated:**
+Added unit tests in `tests/unit/test_health.py` (`test_health_check_all_healthy` and `test_health_check_redis_unhealthy`) covering both healthy Redis responses via `redis.from_url` pinging and unhealthy connection exception handling returning HTTP 503.
+
+**Self-review confirmation:** [x] make check passes  [x] make test-unit passes
+
+**Draft PR feedback received from:** @peer-reviewer
